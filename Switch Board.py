@@ -10,7 +10,7 @@ def switch_language(text):
         'j': 'о', 'k': 'л', 'l': 'д', ';': 'ж', "'": 'э',
         'z': 'я', 'x': 'ч', 'c': 'с', 'v': 'м', 'b': 'и', 'n': 'т',
         'm': 'ь', ',': 'б', '.': 'ю',
-        'й': 'q', 'ц': 'w', 'у': 'e', 'к': 'r', 'е': 't',
+        'й': 'q', 'ц': 'w', 'ё': '`', '`': 'ё', 'у': 'e', 'к': 'r', 'е': 't',
         'н':  'y',  'г':  'u',  'ш':  'i',
         'щ':  'o',  'з':  'p',  'х':  '[',  'ъ':  ']',
         'ф':  'a',  'ы':  's',  'в':  'd',
@@ -19,7 +19,7 @@ def switch_language(text):
         'ж':  ';',  'э':  "'",
         'я':  'z',  'ч':  'x',  'с':  'c',
         'м':  'v',  'и':  'b',  'т':  'n',
-        'ь':  'm',  ',':  ',',  '.': '.'
+        'ь':  'm',  ',':  'б', 'б':  ',',  '.': '.'
     }
     for char in text:
         if char.lower() in language_map:
@@ -28,47 +28,48 @@ def switch_language(text):
             switched_text += char
     return switched_text
 
-def switch_text(event=None):
-    input_text = input_entry.get("1.0", tk.END)
+def switch_text(event=None): #создаем функцию, которая заменяет символы
+    #event содержит информацию о событии, такую как нажатая клавиша
+    input_text = input_entry.get("1.0", tk.END) #начиная с позиции "1.0" (первая строка, первый символ) и до конца текста (tk.END)
     switched_text = switch_language(input_text)
-    output_text.delete('1.0', tk.END)
+    output_text.delete('1.0', tk.END)#delete принимает два аргумента: начальную позицию и конечную позицию, текст в виджете вывода будет удален
     output_text.insert(tk.END, switched_text)
 
 def save_text_to_file():
     text_to_save = output_text.get("1.0", tk.END)
-    file_path = filedialog.asksaveasfilename(defaultextension=".txt", filetypes=[("Text files", "*.txt")])
-    if file_path:
-        with open(file_path, "w") as file:
+    file_path = filedialog.asksaveasfilename(defaultextension=".txt", filetypes=[("Text files", "*.txt")]) #по умолчанию расширение txt
+    if file_path: #проверяет, был ли выбран путь к файлу
+        with open(file_path, "w") as file: #записываем данные в файл, удаляем/заменяем
             file.write(text_to_save)
 
 def load_text_from_file():
     file_path = filedialog.askopenfilename(filetypes=[("Text files", "*.txt")])
     if file_path:
-        with open(file_path, "r") as file:
+        with open(file_path, "r") as file: # режим чтения
             loaded_text = file.read()
             input_entry.delete("1.0", tk.END)
             input_entry.insert(tk.END, loaded_text)
             switch_text() # Вызываем функцию переключения языка после загрузки текста
 
 root = tk.Tk()
-root.title("switch Board")
+root.title("Switch Board")
 
-input_label = tk.Label(root, text="Enter text:")
+input_label = tk.Label(root, text="Ведите текст:", font=("Roman", 10))
 input_label.pack()
 
 input_entry = tk.Text(root, height=5, width=50)
 input_entry.pack()
 
-output_label = tk.Label(root, text="Switched text:")
+output_label = tk.Label(root, text="Изменённый текст:", font=("Roman", 10))
 output_label.pack()
 
 output_text = tk.Text(root, height=5, width=50)
 output_text.pack()
 
-save_button = tk.Button(root, text="Save File", command=save_text_to_file)
+save_button = tk.Button(root, text="Сохранить файл", font=("Roman", 10), command=save_text_to_file)
 save_button.pack()
 
-load_button = tk.Button(root, text="Load File", command=load_text_from_file)
+load_button = tk.Button(root, text="Загрузить файл", font=("Roman", 10), command=load_text_from_file)
 load_button.pack()
 
 def copy_text():
@@ -82,22 +83,23 @@ def clear_text():
     input_entry.delete("1.0", tk.END)
     output_text.delete("1.0", tk.END)
 
-clear_button = tk.Button(root, text="Clear All", command=clear_text)
+clear_button = tk.Button(root, text="Очистить всё", font=("Roman", 10), command=clear_text)
 clear_button.pack()
 
-
-copy_button = tk.Button(root, text="Copy text", command=copy_text)
+copy_button = tk.Button(root, text="Скопировать текст", font=("Roman", 10), command=copy_text)
 copy_button.pack()
 
-paste_button = tk.Button(root, text="Paste text", command=paste_text)
+paste_button = tk.Button(root, text="Вставить текст", font=("Roman", 10), command=paste_text)
 paste_button.pack()
 
 root.configure(bg="#C9F2FF")  # Нежно-голубой цвет фона
 
 input_label.configure(bg="#C9F2FF")  # Нежно-голубой цвет фона для метки ввода
+
 input_entry.configure(bg="white")  # Белый цвет фона для области ввода
 
 output_label.configure(bg="#C9F2FF")  # Нежно-голубой цвет фона для метки вывода
+
 output_text.configure(bg="white")  # Белый цвет фона для области вывода
 
 clear_button.configure(bg="#FFC0CB")  # Розоватый цвет кнопки очистки текста
@@ -110,9 +112,9 @@ copy_button.configure(bg="#87CEEB")  # Светло-голубой цвет кн
 
 paste_button.configure(bg="#87CEEB")  # Светло-голубой цвет кнопки вставки текста
 
-
 switch_text() # Вызываем функцию переключения языка после загрузки текста из файла
 
-root.bind("<Key>", switch_text)
+root.bind("<Key>", switch_text) #чтобы переводился текст в режиме реального времени вызываем функцю и привязываем ее к нажатой клавише
 
 root.mainloop()
+
